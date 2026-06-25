@@ -1,0 +1,127 @@
+benchmarks:
+  kernelbench:
+    url: https://github.com/ScalingIntelligence/KernelBench
+    dest: third_party/KernelBench
+    a100: true
+    mode: integrated
+  tritonbench:
+    url: https://github.com/thunlp/TritonBench
+    dest: third_party/TritonBench
+    a100: true
+    mode: native
+  robust_kbench:
+    url: https://github.com/SakanaAI/robust-kbench
+    dest: third_party/robust-kbench
+    a100: true
+    mode: separate_python311
+  cudabench:
+    url: https://github.com/CUDA-Bench/CUDABench
+    dest: third_party/CUDABench
+    a100: true
+    mode: native
+  flashinfer_bench:
+    url: https://github.com/flashinfer-ai/flashinfer-bench
+    dest: third_party/flashinfer-bench
+    a100: conditional
+    mode: native
+  kernelgym:
+    url: https://github.com/hkust-nlp/KernelGYM
+    dest: third_party/KernelGYM
+    a100: true
+    mode: native_heavy
+  kernelbench_x:
+    url: https://github.com/BonnieW05/KernelBenchX
+    dest: third_party/KernelBenchX
+    a100: true
+    mode: native
+  agent_kernel_arena:
+    url: https://github.com/AMD-AGI/AgentKernelArena
+    dest: third_party/AgentKernelArena
+    a100: false
+    mode: amd_rocm_only
+
+methods:
+  cudaforge:
+    url: https://github.com/OptimAI-Lab/CudaForge
+    dest: third_party/CudaForge
+    a100: true
+    technique: multi-agent + NCU hardware feedback
+  autokernel:
+    url: https://github.com/RightNow-AI/autokernel
+    dest: third_party/autokernel
+    a100: true
+    technique: greedy iterative agent search
+  ksearch:
+    url: https://github.com/caoshiyi/K-Search
+    dest: third_party/K-Search
+    a100: true
+    technique: co-evolving world-model search
+  cuda_l1:
+    url: https://github.com/deepreinforce-ai/CUDA-L1
+    dest: third_party/CUDA-L1
+    a100: true
+    technique: contrastive reinforcement learning
+  cuda_l2:
+    url: https://github.com/deepreinforce-ai/CUDA-L2
+    dest: third_party/CUDA-L2
+    a100: true
+    technique: LLM-guided RL for 1000 HGEMM configurations
+    mode: native_official_artifact
+  autotriton:
+    url: https://github.com/AI9Stars/AutoTriton
+    dest: third_party/AutoTriton
+    a100: true
+    technique: SFT + GRPO
+    hf_id: ai9stars/AutoTriton
+  drkernel:
+    url: https://github.com/hkust-nlp/KernelGYM
+    dest: third_party/KernelGYM
+    a100: true
+    technique: multi-turn RL + profiling rewards
+    hf_id: hkust-nlp/drkernel-14b
+  kernelllm:
+    clone: false
+    url: https://huggingface.co/facebook/KernelLLM
+    dest: models/kernelllm8b
+    a100: true
+    technique: 8B SFT for PyTorch-to-Triton
+    hf_id: facebook/KernelLLM
+  qimeng_gemm:
+    url: https://github.com/QiMeng-IPRC/QiMeng-GEMM
+    dest: third_party/QiMeng-GEMM
+    a100: true
+    technique: adaptive iterative meta-prompts + autotuning
+    mode: native_official_artifact
+  qimeng_tensorop:
+    url: https://github.com/QiMeng-IPRC/QiMeng-TensorOp
+    dest: third_party/QiMeng-TensorOp
+    a100: false
+    technique: hardware-primitive-aware tensor operator generation
+    mode: public_artifact_is_C920V2
+  qimeng_attention:
+    url: https://github.com/QiMeng-IPRC/QiMeng-Attention
+    dest: third_party/QiMeng-Attention
+    a100: true
+    technique: thinking-language + two-stage translation
+    mode: native_repo
+  qimeng_kernel:
+    url: https://github.com/QiMeng-IPRC/QiMeng-Kernel
+    dest: third_party/QiMeng-Kernel
+    a100: conditional
+    technique: macro-thinking / micro-coding
+    mode: checkpoint_and_dataset_required
+  geak:
+    url: https://github.com/AMD-AIG-AIMA/GEAK-Agent
+    dest: third_party/GEAK
+    a100: false
+    technique: modular multi-agent / reflexion
+  cuda_agent:
+    url: https://github.com/BytedTsinghua-SIA/CUDA-Agent
+    dest: third_party/CUDA-Agent
+    a100: conditional
+    technique: agentic reinforcement learning
+  kernelagent:
+    url: https://github.com/meta-pytorch/KernelAgent
+    dest: third_party/KernelAgent
+    a100: true
+    technique: deep multi-agent Triton optimization

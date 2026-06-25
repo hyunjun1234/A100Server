@@ -1,0 +1,231 @@
+# trained_model.py 패치용 명령어
+# 사용법:
+#   cd /home/jun/unified_bench
+#   bash trained_model_patch_commands.txt
+
+cd /home/jun/unified_bench
+
+cat > drivers/trained_model.py <<'PY'
+#!/usr/bin/env python3
+import argparse
+import os
+import re
+from pathlib import Path
+
+import requests
+
+
+def extract_code(text: str) -> str:
+    text = text or ""
+
+    # 1. Prefer fenced python block.
+    blocks = re.findall(
+        r"```(?:python|py)?\s*\n(.*?)```",
+        text,
+        flags=re.DOTALL | re.IGNORECASE,
+    )
+
+    for b in blocks:
+        if "class ModelNew" in b:
+            return clean_code(b)
+
+    if blocks:
+        return clean_code(blocks[0])
+
+    # 2. Fallback: cut from first Python marker.
+    markers = [
+        "import torch",
+        "from torch",
+        "import triton",
+        "from triton",
+        "class ModelNew",
+    ]
+
+    starts = [text.find(m) for m in markers if text.find(m) != -1]
+    if starts:
+        return clean_code(text[min(starts):])
+
+    # 3. Last fallback: save raw. final_eval will mark it failed.
+    return text.strip() + "\n"
+
+
+def clean_code(code: str) -> str:
+    code = code.strip()
+
+    # Remove leading prose accidentally included.
+    bad_prefixes = {
+        "Here's the optimized code:",
+        "Here is the optimized code:",
+        "Here's the optimized model using Triton:",
+        "Here is the optimized model using Triton:",
+        "Sure, here's the optimized code:",
+        "Sure, here is the optimized code:",
+    }
+
+    lines = code.splitlines()
+    while lines and lines[0].strip() in bad_prefixes:
+        lines = lines[1:]
+
+    code = "\n".join(lines).strip()
+
+    # Remove markdown fence remnants.
+    code = code.replace("```python", "").replace("```py", "").replace("```", "").strip()
+
+    # Remove example usage / explanation that may reference undefined Model.
+    cut_markers = [
+        'if __name__ == "__main__":',
+        "if __name__ == '__main__':",
+        "# Example usage",
+        "### Explanation",
+        "## Explanation",
+        "Explanation:",
+        "The optimized code",
+        "This code",
+    ]
+
+    for marker in cut_markers:
+        idx = code.find(marker)
+        if idx != -1:
+            code = code[:idx].strip()
+
+    return code + "\n"
+
+
+def read_task(task_path: Path) -> str:
+    return task_path.read_text(errors="ignore")
+
+
+def build_prompt(task_path: Path, feedback: str = "") -> str:
+    task_src = read_task(task_path)
+
+    prompt = f"""
+You are optimizing a KernelBench task.
+
+Return only one valid Python source file.
+Do not include Markdown.
+Do not include explanations.
+Do not include example usage.
+
+The file must define class ModelNew(torch.nn.Module).
+The ModelNew.forward signature must match the reference Model.forward.
+Use CUDA/Triton/custom kernels if useful.
+Never use CPU tensors.
+All outputs must stay on the same CUDA device as inputs.
+
+Reference task file:
+
+```python
+{task_src}
+```
+"""
+
+    if feedback:
+        prompt += f"\nPrevious evaluation feedback:\n{feedback}\n"
+
+    return prompt
+
+
+def call_server(prompt: str, temperature: float, max_tokens: int, model: str):
+    url = os.environ.get("OPENAI_BASE_URL", "http://127.0.0.1:8000/v1").rstrip("/")
+    endpoint = url + "/chat/completions"
+
+    payload = {
+        "model": model,
+        "messages": [
+            {
+                "role": "system",
+                "content": (
+                    "Return only valid Python source code. "
+                    "The code must define class ModelNew. "
+                    "Do not include markdown. "
+                    "Do not include explanations. "
+                    "Do not include example usage."
+                ),
+            },
+            {"role": "user", "content": prompt},
+        ],
+        "temperature": temperature,
+        "top_p": float(os.environ.get("TOP_P", "0.95")),
+        "max_tokens": max_tokens,
+    }
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer EMPTY",
+    }
+
+    r = requests.post(endpoint, headers=headers, json=payload, timeout=600)
+    r.raise_for_status()
+    obj = r.json()
+    return obj["choices"][0]["message"]["content"]
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--task", required=True)
+    ap.add_argument("--cand_dir", required=True)
+    ap.add_argument("--rounds", type=int, default=1)
+    ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--temperature", type=float, default=0.2)
+    ap.add_argument("--multi_turn", action="store_true")
+    args = ap.parse_args()
+
+    task = Path(args.task).resolve()
+    cand_dir = Path(args.cand_dir).resolve()
+    cand_dir.mkdir(parents=True, exist_ok=True)
+
+    io_dir = cand_dir / "llm_io"
+    io_dir.mkdir(parents=True, exist_ok=True)
+
+    model = os.environ.get("SYSTEM_MODEL_ALIAS") or os.environ.get("MODEL_ALIAS") or "local"
+    max_tokens = int(os.environ.get("MAX_NEW_TOKENS", "1024"))
+
+    feedback = ""
+    for r in range(args.rounds):
+        prompt = build_prompt(task, feedback)
+
+        raw = call_server(
+            prompt=prompt,
+            temperature=args.temperature,
+            max_tokens=max_tokens,
+            model=model,
+        )
+
+        raw_path = io_dir / f"round{r:03d}_raw_reply.txt"
+        raw_path.write_text(raw)
+
+        code = extract_code(raw)
+
+        out = cand_dir / f"round{r:03d}_kernel.py"
+        out.write_text(code)
+
+        first_line = code.splitlines()[0] if code.splitlines() else "<empty>"
+        print(f"[trained_model] wrote {out}")
+        print(f"[trained_model] raw reply: {raw_path}")
+        print(f"[trained_model] code starts with: {first_line}")
+
+        feedback = "Previous candidate was generated. Improve correctness and performance."
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+PY
+
+chmod +x drivers/trained_model.py
+
+echo "patched drivers/trained_model.py"
+echo ""
+echo "이제 AutoTriton / DrKernel만 다시 돌리려면 아래 실행:"
+echo ""
+echo "cd /home/jun/unified_bench"
+echo "mkdir -p logs"
+echo "rm -rf runs/autotriton_autotriton8b_kernelbench_tiny5_round1_repeat1_temp0.2"
+echo "rm -rf runs/drkernel_drkernel14b_kernelbench_tiny5_round1_repeat1_temp0.2"
+echo ""
+echo "CUDA_VISIBLE_DEVICES=0 \\"
+echo "TASK_LIST=\"kernelbench_tiny5.txt\" \\"
+echo "SYSTEMS=\"autotriton drkernel\" \\"
+echo "nohup ./run_all_with_server.sh 1 1 0.2 900 \\"
+echo "  > logs/rtx6000_autotriton_drkernel_tiny5_retry_extract.out 2>&1 &"

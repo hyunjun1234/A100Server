@@ -1,0 +1,71 @@
+# =============================================================================
+# 평가 대상 repo / checkpoint 목록 — 2026-06-11 웹 검색으로 URL 확인 완료
+# clone_repos.sh 가 이 파일을 읽고 clone + SHA pin → results/repo_lock.json
+# commit을 비워두면 clone 시점 HEAD가 lockfile에 기록된다 (논문에는 lockfile SHA 보고).
+# =============================================================================
+
+repos:
+  kernelbench:
+    url: https://github.com/ScalingIntelligence/KernelBench
+    commit: ""
+    dest: third_party/KernelBench
+
+  cudaforge:                      # arXiv 2511.01884 (Coder+Judge, NCU feedback)
+    url: https://github.com/OptimAI-Lab/CudaForge
+    commit: ""
+    dest: third_party/CudaForge
+
+  autokernel:                     # arXiv 2603.21331 (RightNow AI; uv 기반, KernelBench bridge 내장)
+    url: https://github.com/RightNow-AI/autokernel
+    commit: ""
+    dest: third_party/autokernel
+    note: "uv sync --extra kernelbench 필요. kernelbench/bridge.py, bench_kb.py, scorer.py 제공"
+
+  ksearch:                        # arXiv 2602.19128 (co-evolving world model)
+    url: https://github.com/caoshiyi/K-Search
+    commit: ""
+    dest: third_party/K-Search
+    note: "주 평가 대상이 FlashInfer 계열 — KernelBench task 입력은 driver로 어댑팅 필요"
+
+  geak:                           # arXiv 2507.23194 (AMD, Reflexion-style)
+    url: https://github.com/AMD-AGI/GEAK
+    commit: ""
+    dest: third_party/GEAK
+    note: "eval suite는 별도: https://github.com/AMD-AIG-AIMA/GEAK-eval. AMD 지향 → NVIDIA 평가 시 비대칭 명시"
+
+  geak_eval:
+    url: https://github.com/AMD-AIG-AIMA/GEAK-eval
+    commit: ""
+    dest: third_party/GEAK-eval
+
+  cuda_l1:                        # arXiv 2507.14111 (contrastive RL)
+    url: https://github.com/deepreinforce-ai/CUDA-L1
+    commit: ""
+    dest: third_party/CUDA-L1
+    note: "[주의] repo는 250개 최적화 kernel + 평가 코드 공개. 학습된 model checkpoint 공개 여부는 repo에서 직접 확인할 것 — 미공개면 '공개 산출물(kernel) 평가'로 범위 한정하고 evaluation sheet에 기록"
+
+  autotriton:                     # arXiv 2507.05687 (8B, SFT+GRPO; Seed-Coder-8B-Reasoning 기반)
+    url: https://github.com/AI9Stars/AutoTriton
+    commit: ""
+    dest: third_party/AutoTriton
+    note: "README에 'We provide the model weights' 명시 — HF id는 repo README 링크에서 확인 후 아래 models에 기입"
+
+  drkernel:                       # arXiv 2602.05885 (Dr.Kernel-14B + KernelGYM 환경)
+    url: https://github.com/hkust-nlp/KernelGYM
+    commit: ""
+    dest: third_party/KernelGYM
+    note: "환경/학습코드/모델/데이터 일괄 공개 (HF 논문 페이지 명시). 모델 HF id는 repo에서 확인"
+
+  cuda_agent:                     # arXiv 2602.24286 (ByteDance Seed + Tsinghua AIR)
+    url: https://github.com/BytedTsinghua-SIA/CUDA-Agent
+    commit: ""
+    dest: third_party/CUDA-Agent
+    note: "[주의] 공개 범위 = 학습 데이터, SKILL.md, agent 환경, KernelBench inference 결과. base가 Seed1.6 MoE라 model checkpoint 미공개 가능성 높음 — 미공개면 (a) 공개된 inference 결과 재검증 또는 (b) 공개 환경 + 대체 base model 평가로 범위 한정하고 명시"
+
+# --- HF checkpoint id: 각 repo README의 모델 링크에서 확인 후 기입 ------------
+# (id는 repo가 가리키는 공식 링크가 1차 출처. 임의 추정 금지 — 잘못된 모델 평가 방지)
+models:
+  autotriton: {hf_id: "", source: "AI9Stars/AutoTriton README의 model weights 링크"}
+  drkernel:   {hf_id: "", source: "hkust-nlp/KernelGYM README의 Dr.Kernel-14B 링크"}
+  cuda_l1:    {hf_id: "", source: "deepreinforce-ai/CUDA-L1 README — 공개 시에만"}
+  cuda_agent: {hf_id: "", source: "BytedTsinghua-SIA/CUDA-Agent README — 공개 시에만"}

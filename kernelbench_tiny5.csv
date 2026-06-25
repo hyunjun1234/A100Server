@@ -1,0 +1,6 @@
+level,task_id,task_path,task_name
+level1,2,third_party/KernelBench/KernelBench/level1/2_Standard_matrix_multiplication_.py,2_Standard_matrix_multiplication_.py
+level1,3,third_party/KernelBench/KernelBench/level1/3_Batched_matrix_multiplication.py,3_Batched_matrix_multiplication.py
+level1,5,third_party/KernelBench/KernelBench/level1/5_Matrix_scalar_multiplication.py,5_Matrix_scalar_multiplication.py
+level1,7,third_party/KernelBench/KernelBench/level1/7_Matmul_with_small_K_dimension_.py,7_Matmul_with_small_K_dimension_.py
+level1,17,third_party/KernelBench/KernelBench/level1/17_Matmul_with_transposed_B.py,17_Matmul_with_transposed_B.py

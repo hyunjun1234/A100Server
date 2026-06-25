@@ -1,0 +1,159 @@
+{
+  "archive": "a100_official5_subset50_expand_debug.tar.gz",
+  "archive_bytes": 2065950,
+  "file_count": 5201,
+  "key_files": {
+    "unified_summary_corrected.csv": "debug_upload_a100_official5_expand/unified_summary_corrected.csv",
+    "unified_summary.csv": "debug_upload_a100_official5_expand/unified_summary.csv",
+    "unified_per_task.csv": "debug_upload_a100_official5_expand/unified_per_task.csv",
+    "evaluation_sheet.json": "debug_upload_a100_official5_expand/evaluation_sheet.json",
+    "repo_lock.json": "debug_upload_a100_official5_expand/repo_lock.json"
+  },
+  "campaigns": [
+    {
+      "system": "autokernel",
+      "rounds": 1,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/autokernel_qwen14b_kernelbench_tiny1_round1_repeat1_temp0.2",
+        "debug_upload_a100_official5_expand/runs/autokernel_qwen14b_kernelbench_tiny5_round1_repeat1_temp0.2"
+      ],
+      "task_summaries": 6
+    },
+    {
+      "system": "autokernel",
+      "rounds": 3,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/autokernel_qwen14b_kernelbench_subset50_round3_repeat1_temp0.2"
+      ],
+      "task_summaries": 50
+    },
+    {
+      "system": "autotriton",
+      "rounds": 1,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/autotriton_autotriton8b_kernelbench_tiny1_round1_repeat1_temp0.2",
+        "debug_upload_a100_official5_expand/runs/autotriton_autotriton8b_kernelbench_tiny5_round1_repeat1_temp0.2"
+      ],
+      "task_summaries": 6
+    },
+    {
+      "system": "autotriton",
+      "rounds": 3,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/autotriton_autotriton8b_kernelbench_subset50_round3_repeat1_temp0.2"
+      ],
+      "task_summaries": 50
+    },
+    {
+      "system": "cuda_agent",
+      "rounds": 1,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/cuda_agent_qwen14b_kernelbench_tiny1_round1_repeat1_temp0.2"
+      ],
+      "task_summaries": 1
+    },
+    {
+      "system": "cuda_l1",
+      "rounds": 1,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/cuda_l1_qwen14b_kernelbench_tiny1_round1_repeat1_temp0.2",
+        "debug_upload_a100_official5_expand/runs/cuda_l1_qwen14b_kernelbench_tiny5_round1_repeat1_temp0.2"
+      ],
+      "task_summaries": 6
+    },
+    {
+      "system": "cuda_l1",
+      "rounds": 3,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/cuda_l1_qwen14b_kernelbench_subset50_round3_repeat1_temp0.2"
+      ],
+      "task_summaries": 50
+    },
+    {
+      "system": "cudaforge",
+      "rounds": 1,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/cudaforge_qwen14b_kernelbench_tiny1_round1_repeat1_temp0.2",
+        "debug_upload_a100_official5_expand/runs/cudaforge_qwen14b_kernelbench_tiny5_round1_repeat1_temp0.2"
+      ],
+      "task_summaries": 6
+    },
+    {
+      "system": "cudaforge",
+      "rounds": 3,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/cudaforge_qwen14b_kernelbench_subset50_round3_repeat1_temp0.2"
+      ],
+      "task_summaries": 50
+    },
+    {
+      "system": "drkernel",
+      "rounds": 1,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/drkernel_drkernel14b_kernelbench_tiny1_round1_repeat1_temp0.2",
+        "debug_upload_a100_official5_expand/runs/drkernel_drkernel14b_kernelbench_tiny5_round1_repeat1_temp0.2"
+      ],
+      "task_summaries": 6
+    },
+    {
+      "system": "drkernel",
+      "rounds": 3,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/drkernel_drkernel14b_kernelbench_subset50_round3_repeat1_temp0.2"
+      ],
+      "task_summaries": 50
+    },
+    {
+      "system": "geak",
+      "rounds": 1,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/geak_qwen14b_kernelbench_tiny1_round1_repeat1_temp0.2"
+      ],
+      "task_summaries": 1
+    },
+    {
+      "system": "ksearch",
+      "rounds": 1,
+      "repeat": 1,
+      "temperature": "0.2",
+      "run_dirs": [
+        "debug_upload_a100_official5_expand/runs/ksearch_qwen14b_kernelbench_tiny1_round1_repeat1_temp0.2",
+        "debug_upload_a100_official5_expand/runs/ksearch_qwen14b_kernelbench_tiny5_round1_repeat1_temp0.2"
+      ],
+      "task_summaries": 6
+    }
+  ],
+  "error_counts": {
+    "correctness": 1246,
+    "compile": 222,
+    "device": 126,
+    "oom": 12,
+    "modelnew": 2,
+    "timeout": 10
+  },
+  "multiple_campaigns": true
+}

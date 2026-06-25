@@ -1,0 +1,64 @@
+# ============================================================
+# Whitelist .gitignore — ignore EVERYTHING, then allow code only.
+# Repo lives inside a 103GB tree (models/, third_party/, .venv/);
+# this prevents data/binaries/secrets from ever being committed.
+# ============================================================
+
+# 1) Ignore everything by default
+/*
+
+# 2) Re-include source directories (git descends into these)
+!/scripts/
+!/systems/
+!/native/
+!/registry/
+!/tools/
+!/drivers/
+!/feedback/
+!/a100_official5_followup_tools/
+
+# 3) Re-include top-level source & config files
+!/*.py
+!/*.sh
+!/*.cu
+!/*.cuh
+!/*.cpp
+!/*.h
+!/*.hpp
+!/*.csv
+!/*.txt
+!/*.md
+!/*.env
+!/*.yaml
+!/*.yml
+!/*.toml
+
+# 4) Re-include experiment archives (kept intentionally)
+!/*.tar.gz
+!/*.zip
+
+!/.gitignore
+
+# 5) Within allowed dirs, still drop junk / binaries / secrets
+**/__pycache__/
+*.pyc
+*.pyo
+*.so
+*.o
+*.out
+*.bak
+*.log
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.ckpt
+*.npy
+*.npz
+# never commit secrets even if they land in an allowed dir
+**/*secret*
+**/*token*
+**/*credential*
+**/id_ed25519*
+**/id_rsa*
+**/.env.local

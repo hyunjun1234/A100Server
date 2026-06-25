@@ -1,0 +1,5 @@
+third_party/KernelBench/KernelBench/level1/2_Standard_matrix_multiplication_.py
+third_party/KernelBench/KernelBench/level1/3_Batched_matrix_multiplication.py
+third_party/KernelBench/KernelBench/level1/5_Matrix_scalar_multiplication.py
+third_party/KernelBench/KernelBench/level1/7_Matmul_with_small_K_dimension_.py
+third_party/KernelBench/KernelBench/level1/17_Matmul_with_transposed_B.py
